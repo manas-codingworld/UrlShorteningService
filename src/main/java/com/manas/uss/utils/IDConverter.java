@@ -4,20 +4,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * 
+ * @author manasranjan
+ * utility class for encoding and decoding id/short url
+ */
 public class IDConverter {
 
-	public static final IDConverter INSTANCE = new IDConverter();
+	private IDConverter() {	}
 
-	private IDConverter() {
+	//initializing the data structures while class loading
+	static{
 		initializeCharToIndexTable();
 		initializeIndexToCharTable();
 	}
-
+	
 	private static HashMap<Character, Integer> charToIndexTable;
 	private static List<Character> indexToCharTable;
 
-	private void initializeCharToIndexTable() {
+	/**
+	 * storing character and corresponding integer in the map
+	 */
+	private static void initializeCharToIndexTable() {
 		charToIndexTable = new HashMap<>();
 		// 0->a, 1->b, ..., 25->z, ..., 52->0, 61->9
 		for (int i = 0; i < 26; ++i) {
@@ -37,7 +45,10 @@ public class IDConverter {
 		}
 	}
 
-	private void initializeIndexToCharTable() {
+	/**
+	 * storing character in the list
+	 */
+	private static void initializeIndexToCharTable() {
 		// 0->a, 1->b, ..., 25->z, ..., 52->0, 61->9
 		indexToCharTable = new ArrayList<>();
 		for (int i = 0; i < 26; ++i) {
@@ -55,10 +66,14 @@ public class IDConverter {
 			c += (i - 52);
 			indexToCharTable.add(c);
 		}
-
 	}
 
-	public Long getDictionaryKeyFromUniqueID(String uniqueID) {
+	/**
+	 * 
+	 * @param uniqueID in the path param in the endpoint
+	 * @return getting the id from unique id
+	 */
+	public static Long getDictionaryKeyFromUniqueID(String uniqueID) {
 		List<Character> base62Number = new ArrayList<>();
 		for (int i = 0; i < uniqueID.length(); ++i) {
 			base62Number.add(uniqueID.charAt(i));
@@ -67,7 +82,12 @@ public class IDConverter {
 		return dictionaryKey;
 	}
 
-	private Long convertBase62ToBase10ID(List<Character> ids) {
+	/**
+	 * 
+	 * @param ids - list of characters
+	 * @return id as key in the redis hash
+	 */
+	private static Long convertBase62ToBase10ID(List<Character> ids) {
 		long id = 0L;
 		int exp = ids.size() - 1;
 		for (int i = 0; i < ids.size(); ++i, --exp) {
@@ -77,7 +97,11 @@ public class IDConverter {
 		return id;
 	}
 
-	public String createUniqueID(Long id) {
+	/**
+	 * @param id is the incremented ID from the redis server
+	 * @return encoded value using id
+	 */
+	public static String createUniqueID(Long id) {
 		List<Integer> base62ID = convertBase10ToBase62ID(id);
 		StringBuilder uniqueURLID = new StringBuilder();
 		for (int digit: base62ID) {
@@ -85,7 +109,12 @@ public class IDConverter {
 		}
 		return uniqueURLID.toString();
 	}
-	private List<Integer> convertBase10ToBase62ID(Long id) {
+	
+	/**
+	 * @param id is the incremented ID from the redis server
+	 * @return list of integers decoded from the id
+	 */
+	private static List<Integer> convertBase10ToBase62ID(Long id) {
 		List<Integer> digits = new LinkedList<>();
 		while(id > 0) {
 			int remainder = (int)(id % 62);

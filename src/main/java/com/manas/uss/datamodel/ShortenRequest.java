@@ -1,5 +1,9 @@
 package com.manas.uss.datamodel;
 
+/**
+ * @author manasranjan
+ * data model class for request
+ */
 public class ShortenRequest {
 
 	private String url;

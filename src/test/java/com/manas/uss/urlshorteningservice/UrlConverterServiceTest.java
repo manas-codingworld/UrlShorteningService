@@ -10,10 +10,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.manas.uss.businessservices.URLConverterService;
 
+/**
+ * @author manasranjan
+ * test class for UrlConverterService.java
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UrlshorteningserviceApplicationTests {
-	
+public class UrlConverterServiceTest {
+
 	@Autowired
 	URLConverterService urlConverterService;
 	

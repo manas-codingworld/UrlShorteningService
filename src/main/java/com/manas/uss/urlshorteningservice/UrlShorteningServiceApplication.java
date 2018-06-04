@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 /**
  * 
  * @author manasranjan
- * start of springboot with base package scanning
+ * start of springboot and scanning of base packages of component and entity
  *
  */
 @SpringBootApplication
