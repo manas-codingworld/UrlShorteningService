@@ -33,6 +33,9 @@ public class URLRepositoryImpl implements URLRepository{
 	@Value("${jedis.created.url}")
 	private  String createURLKey;
 	
+	@Value("${jedis.expiry.time}")
+	private String expiry;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(URLRepositoryImpl.class);
 
 	public URLRepositoryImpl() {
@@ -56,9 +59,10 @@ public class URLRepositoryImpl implements URLRepository{
 	public void saveUrl(String key, String longUrl) {
 		LOGGER.info("Saving: {} at {}", longUrl, key);
 		jedis.hset(urlKey, key, longUrl);
-		jedis.expire(key, 2592000);//setting expiry for 30days
+		jedis.expire(key, Integer.parseInt(expiry));//setting expiry for 2 days
 		//added to avoid duplicate entries
 		jedis.hset(createURLKey, longUrl,key.substring(4));
+		jedis.expire(createURLKey, Integer.parseInt(expiry));//setting expiry for 2 days
 	}
 
 	/**
